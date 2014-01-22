@@ -1,6 +1,6 @@
 require 'chefspec'
-require_relative('../../../chefspec/config')
-require_relative('../../../chefspec_extensions/automatic_resource_matcher')
+require_relative('../../../../chefspec/config')
+require_relative('../../../../chefspec_extensions/automatic_resource_matcher')
 
 describe 'mssqlserver_alwayson::firewall' do
   let(:chef_run) { ChefSpec::Runner.new.converge(described_recipe) }

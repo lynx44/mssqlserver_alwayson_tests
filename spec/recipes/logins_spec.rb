@@ -1,5 +1,5 @@
 require 'chefspec'
-require_relative('../../../chefspec/config')
+require_relative('../../../../chefspec/config')
 
 describe 'mssqlserver_alwayson::logins' do
   let(:chef_run) { ChefSpec::Runner.new.converge(described_recipe) }
