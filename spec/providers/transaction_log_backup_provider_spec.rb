@@ -30,7 +30,7 @@ describe 'mssqlserver_alwayson_tests::transaction_log_backup_provider' do
     expect(converge).to run_mssqlserver_backup_transaction_log(node['description']).with({
           :destination => node['file_path'],
           :database => node['database'],
-          :with => ['NOFORMAT', 'NOINIT', 'NOSKIP', 'REWIND', 'NOUNLOAD', 'COMPRESSION',  'STATS = 5']
+          :with => ['NOFORMAT', 'INIT', 'NOSKIP', 'REWIND', 'NOUNLOAD', 'COMPRESSION',  'STATS = 5']
       })
   end
 end
