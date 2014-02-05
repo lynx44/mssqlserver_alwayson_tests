@@ -15,12 +15,13 @@ describe 'mssqlserver_alwayson_tests::logins_create_provider' do
   let(:converge) { chef_run.converge(described_recipe) }
   let(:node) { chef_run.node }
 
-  it 'passes syntax checks' do
-    expect(converge)
-  end
-
   before do
     @script_path = "#{Chef::Config[:file_cache_path]}\\Logins.sql"
+    stub_sql_service(true, 'LocalSystem')
+  end
+
+  it 'passes syntax checks' do
+    expect(converge)
   end
 
   it 'renders login script to specify other nodes when sql service user is system account' do
