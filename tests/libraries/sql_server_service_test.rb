@@ -60,4 +60,11 @@ class TestSqlServerService < Test::Unit::TestCase
 
     assert_false(service.uses_system_account)
   end
+
+  def test_removes_line_endings
+    expected = 'domain\someone'
+    setup_shell_out({ :service_start_name => "#{expected} " })
+
+    assert_equal(expected, service.logon_username)
+  end
 end

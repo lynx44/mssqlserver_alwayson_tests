@@ -25,6 +25,4 @@ describe 'mssqlserver_alwayson::default' do
     node.set['mssqlserver']['alwayson']['endpoint']['name'] = expected
     expect(converge).to create_mssqlserver_alwayson_group_endpoint(expected)
   end
-
-  it 'runs '
 end

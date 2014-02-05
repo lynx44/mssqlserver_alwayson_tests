@@ -2,6 +2,7 @@ require 'chefspec'
 require_relative('../../../../chefspec/config')
 require_relative('../../../../chefspec_extensions/automatic_resource_matcher')
 require_relative('../template_context')
+require_relative('../../../../cookbooks/mssqlserver_alwayson/libraries/sql_server_service')
 
 describe 'mssqlserver_alwayson_tests::logins_create_provider' do
   include_context 'templates'
@@ -22,8 +23,8 @@ describe 'mssqlserver_alwayson_tests::logins_create_provider' do
     @script_path = "#{Chef::Config[:file_cache_path]}\\Logins.sql"
   end
 
-  it 'renders login script to specify other nodes when sql service user is not specified' do
-    node.set['service_username'] = nil
+  it 'renders login script to specify other nodes when sql service user is system account' do
+    stub_sql_service(true, 'LocalSystem')
     hostname = 'host1'
     domain = 'domain1'
     expectedHostname = hostname
@@ -36,9 +37,18 @@ describe 'mssqlserver_alwayson_tests::logins_create_provider' do
   end
 
   it 'renders login script to specify other nodes when sql service user is not specified' do
-    account = 'custom_domain\user'
-    node.set['service_username'] = account
+    username = 'domain\someone'
+    escaped_username = username.sub("\\", "[\\\\\\]")
+    stub_sql_service(false, username)
 
-    expect(converge).to_not run_mssqlserver_sql_command('create server logins')
+    expect(converge).to render_file(@script_path).with_content(
+      /IF NOT EXISTS \(SELECT loginname FROM master.dbo.syslogins WHERE name = '#{escaped_username}'\)[\s]+CREATE LOGIN \[#{escaped_username}\] FROM WINDOWS[\s]*/)
+  end
+
+  def stub_sql_service(is_system, logon_username)
+    service = double()
+    service.stub(:uses_system_account).and_return(is_system)
+    service.stub(:logon_username).and_return(logon_username)
+    AlwaysOn::SqlServerService.stub(:new).and_return(service)
   end
 end
