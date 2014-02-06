@@ -55,6 +55,12 @@ class TestSqlServerService < Test::Unit::TestCase
     assert_true(service.uses_system_account)
   end
 
+  def test_uses_system_account_returns_true_for_mssqlserver
+    setup_shell_out({ :service_start_name => 'NT Service\MSSQLSERVER' })
+
+    assert_true(service.uses_system_account)
+  end
+
   def test_uses_system_account_returns_false_when_custom
     setup_shell_out({ :service_start_name => 'domain\someone' })
 
