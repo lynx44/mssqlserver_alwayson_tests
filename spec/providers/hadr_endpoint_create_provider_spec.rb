@@ -10,6 +10,7 @@ describe 'mssqlserver_alwayson_tests::hadr_endpoint_create_provider' do
   let(:chef_run) do
     ChefSpec::Runner.new(step_into: ['mssqlserver_alwayson_hadr_endpoint']) do |node|
       node.set['nodes'] = [{ 'hostname' => 'host1', 'domain' => 'domain1' }]
+      node.set['description'] = 'test'
     end
   end
   let(:converge) { chef_run.converge(described_recipe) }

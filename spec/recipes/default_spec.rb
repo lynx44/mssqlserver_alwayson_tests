@@ -3,7 +3,12 @@ require_relative('../../../../chefspec/config')
 require_relative('../../../../chefspec_extensions/automatic_resource_matcher')
 
 describe 'mssqlserver_alwayson::default' do
-  let(:chef_run) { ChefSpec::Runner.new }
+  let(:chef_run) do
+    ChefSpec::Runner.new do |node|
+      node.set['mssqlserver']['alwayson']['name'] = 'test group'
+      node.set['mssqlserver']['alwayson']['endpoint']['name'] = 'test'
+    end
+  end
   let(:converge) { chef_run.converge(described_recipe) }
   let(:node) { chef_run.node }
 
@@ -17,7 +22,7 @@ describe 'mssqlserver_alwayson::default' do
 
   it 'ignores endpoint configuration if not present' do
     node.set['mssqlserver']['alwayson']['endpoint']['name'] = nil
-    expect(converge).to_not create_mssqlserver_alwayson_group_endpoint(nil)
+    expect(converge).to_not create_mssqlserver_alwayson_group_endpoint(node['mssqlserver']['alwayson']['endpoint']['name'])
   end
 
   it 'creates endpoint configuration if present' do
