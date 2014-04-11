@@ -46,6 +46,16 @@ describe 'mssqlserver_alwayson::default' do
     expect(converge).to create_mssqlserver_alwayson_group_endpoint(expected)
   end
 
+  it 'creates read-only endpoints for all nodes' do
+    all_nodes.each do |current_node|
+      expect(converge).to update_mssqlserver_alwayson_read_only_routing_endpoint("create readonly routing endpoint for #{current_node['hostname']}").with({
+          :availability_group => node['mssqlserver']['alwayson']['name'],
+          :node_name => current_node['hostname'],
+          :url => "TCP://#{current_node['fqdn']}:1433"
+      })
+    end
+  end
+
   it 'creates read-only routing list for all nodes' do
     all_nodes.each do |current_node|
       expect(converge).to update_mssqlserver_alwayson_read_only_routing_list("create readonly routing list for #{current_node['hostname']}").with({
