@@ -10,7 +10,7 @@ describe 'mssqlserver_alwayson_tests::read_only_routing_endpoint_update_provider
       node.set['description'] = 'default description'
       node.set['availability_group'] = 'ag'
       node.set['secondary_node'] = 'server1'
-      node.set['url'] = "tcp://server:1433"
+      node.set['url'] = "tcp://server.domain.com:1433"
     end
   end
 
