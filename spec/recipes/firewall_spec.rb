@@ -10,6 +10,6 @@ describe 'mssqlserver_alwayson::firewall' do
   end
 
   it 'opens firewall port' do
-    expect(chef_run).to open_windows_firewall_rule('alwayson hadr endpoint').with({ :port => 5022 })
+    expect(chef_run).to open_windows_firewall_rule('alwayson hadr endpoint').with({ :localport => "5022" })
   end
 end
